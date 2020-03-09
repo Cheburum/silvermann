@@ -15,7 +15,7 @@ from ada_in import AdaInstanceNormalization
 from draw_callback import DrawCallback
 
 from tensorflow.keras.mixed_precision import experimental as mixed_precision
-
+import argparse
 
 def ms_ssim(true, pred):
     return 1 - tf.image.ssim_multiscale(true, pred, 1.0, power_factors=(0.5, 0.3, 0.2))
@@ -87,4 +87,7 @@ def main(directory: str):
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('directory', type=str, help='Input files directory')
+    args = parser.parse_args()
+    main(args.directory)
