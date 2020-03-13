@@ -87,7 +87,7 @@ def __up_conv_block(x: Tensor, batch_norm: bool = True, kernel_size: tuple = (3,
     return x
 
 
-def __constant_image(size: (int, int, int) = (5, 8, 128)) -> (Tensor, Tensor):
+def __constant_image(size: (int, int, int) = (9, 16, 128)) -> (Tensor, Tensor):
     constant_image = Input(shape=[1], name='constant_input')
     x = Dense(size[0] * size[1] * size[2], kernel_initializer='he_normal', trainable=True)(constant_image)
     x = Reshape(size)(x)

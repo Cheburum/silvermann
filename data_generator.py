@@ -81,6 +81,5 @@ class DataGenerator(Sequence):
             X[i,] = self.data[ID]
 
             # Store class
-            y[i] = (img_to_array(load_img(self.data_dir + self.target[ID], target_size=self.dim, interpolation='bicubic')) / 255).astype(np.float16)
-
+            y[i] = (img_to_array(load_img(join(self.data_dir, self.target[ID]), target_size=self.dim, interpolation='bicubic')) / 255).astype(np.float16)
         return X, y
