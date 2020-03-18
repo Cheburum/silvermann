@@ -1,4 +1,4 @@
-from tensorflow.keras.layers import Input, Dense, Conv2DTranspose, Reshape, BatchNormalization, LeakyReLU, Add
+from tensorflow.keras.layers import Input, Dense, Conv2DTranspose, Reshape, BatchNormalization, LeakyReLU, Activation, Add
 from tensorflow.keras.models import Model
 from tensorflow import Tensor
 
