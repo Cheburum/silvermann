@@ -1,4 +1,4 @@
-from tensorflow.keras.layers import Input, Dense, Conv2DTranspose, Reshape, BatchNormalization, Activation, Add
+from tensorflow.keras.layers import Input, Dense, Conv2DTranspose, Reshape, BatchNormalization, LeakyReLU, Add
 from tensorflow.keras.models import Model
 from tensorflow import Tensor
 
@@ -31,7 +31,7 @@ def __res_block(x: Tensor, batch_norm: bool = True, kernel_size: (int, int) = (3
         x = Conv2DTranspose(channels, kernel_size, strides=(1, 1), padding='same', trainable=True)(x)
         if batch_norm:
             x = BatchNormalization(trainable=True)(x)
-        x = Activation('relu')(x)
+        x = LeakyReLU(alpha=0.2)(x)
         if i == 0:
             x_shortcut = x
         elif i == block_size - 2:
@@ -62,17 +62,17 @@ def __res_bottleneck_block(x: Tensor, batch_norm: bool = True, kernel_size: (int
 
     if batch_norm:
         x = BatchNormalization(trainable=True)(x)
-    x = Activation('relu')(x)
+    x = LeakyReLU(alpha=0.2)(x)
     x = Conv2DTranspose(channels * 4, (1, 1), strides=(1, 1), padding='same', trainable=True)(x)
 
     if batch_norm:
         x = BatchNormalization(trainable=True)(x)
-    x = Activation('relu')(x)
+    x = LeakyReLU(alpha=0.2)(x)
     x = Conv2DTranspose(channels, kernel_size, strides=(1, 1), padding='same', trainable=True)(x)
 
     if batch_norm:
         x = BatchNormalization(trainable=True)(x)
-    x = Activation('relu')(x)
+    x = LeakyReLU(alpha=0.2)(x)
     x = Conv2DTranspose(channels, (1, 1), strides=(1, 1), padding='same', trainable=True)(x)
 
     x = _shortcut(x_shortcut, x)
@@ -83,7 +83,7 @@ def __up_conv_block(x: Tensor, batch_norm: bool = True, kernel_size: tuple = (3,
     x = Conv2DTranspose(channels, kernel_size, strides=(2, 2), padding='same', trainable=True)(x)
     if batch_norm:
         x = BatchNormalization(trainable=True)(x)
-    x = Activation('relu')(x)
+    x = LeakyReLU(alpha=0.2)(x)
     return x
 
 
