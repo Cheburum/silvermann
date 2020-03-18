@@ -21,6 +21,9 @@ from os import listdir
 def ms_ssim(true, pred):
     return 1 - tf.image.ssim_multiscale(true, pred, 1.0, power_factors=(0.5, 0.3, 0.2))
 
+def ms_ssim_low(true, pred):
+    return 1 - tf.image.ssim_multiscale(true, pred, 1.0, power_factors=(0.6, 0.4))
+
 
 def configurate_gpu():
     gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -47,8 +50,8 @@ def train_model(model: tf.keras.models.Model, epochs: int, directory: str, batch
     optimizer = optimizers.Adam(learning_rate=decay, amsgrad=True)
     resolution = model.output_shape[1:3]
 
-    if resolution[0] < 160:
-        model.compile(optimizer=optimizer, loss='binary_crossentropy')
+    if min(resolution[0], resolution[1]) < 88:
+        model.compile(optimizer=optimizer, loss=ms_ssim_low)
     else:
         model.compile(optimizer=optimizer, loss=ms_ssim)
 
@@ -78,7 +81,7 @@ def progressive_learning(directory: str, batch_size: int):
         new_model = increase_generator_resolution(new_model, repeats, channels, set_old_nontrainable=True)
         train_model(new_model, epochs=pretrain_new_layers, directory=directory, batch_size=batch_size, model_id=current_model)
         set_everything_trainable(new_model)
-        train_model(new_model, epochs=epochs, directory=directory, batch_size=batch_size, model_id=current_model initial_epoch = pretrain_new_layers)
+        train_model(new_model, epochs=epochs, directory=directory, batch_size=batch_size, model_id=current_model, initial_epoch = pretrain_new_layers)
         current_model += 1
 
 
