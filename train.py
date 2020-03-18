@@ -62,12 +62,12 @@ def train_model(model: tf.keras.models.Model, epochs: int, directory: str, batch
 
 
 def progressive_learning(directory: str, batch_size: int):
-    new_model = build_base_generator(repeats=(3, 4, 6), channels=(128, 64, 64))
+    new_model = build_base_generator(repeats=(6, 8), channels=(128, 64))
     plot_model(new_model, 'base_model.png', show_shapes=True)
     new_model.summary()
-    train_model(new_model, epochs=100, directory=directory, batch_size=batch_size)
+    train_model(new_model, epochs=50, directory=directory, batch_size=batch_size)
 
-    addon_repeats = (6, 8, 8)
+    addon_repeats = (24, 16, 16)
     addon_channels = (64, 32, 32)
     addon_epochs = (200, 300, 500)
     pretrain_new_layers = 10
@@ -76,9 +76,9 @@ def progressive_learning(directory: str, batch_size: int):
 
     for repeats, channels, epochs in zip(addon_repeats, addon_channels, addon_epochs):
         new_model = increase_generator_resolution(new_model, repeats, channels, set_old_nontrainable=True)
-        train_model(new_model, pretrain_new_layers, model_id=current_model)
+        train_model(new_model, epochs=pretrain_new_layers, directory=directory, batch_size=batch_size, model_id=current_model)
         set_everything_trainable(new_model)
-        train_model(new_model, epochs, directory=directory, model_id=current_model, initial_epoch = pretrain_new_layers)
+        train_model(new_model, epochs=epochs, directory=directory, batch_size=batch_size, model_id=current_model initial_epoch = pretrain_new_layers)
         current_model += 1
 
 
