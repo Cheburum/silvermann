@@ -104,8 +104,8 @@ def build_base_generator(repeats: tuple = (4, 4, 6, 8, 8), channels: tuple = (12
 
     for i, j in zip(repeats, channels):
         current_layer = __up_conv_block(current_layer, channels=j)
-        current_layer = __ada_inst(style, current_layer)
         for _ in range(i):
+            current_layer = __ada_inst(style, current_layer)
             current_layer = __res_bottleneck_block(current_layer, channels=j)
     output = Conv2DTranspose(3, (3, 3), strides=(1, 1), padding='same', name='output',
                              trainable=True)(
@@ -118,18 +118,16 @@ def build_base_generator(repeats: tuple = (4, 4, 6, 8, 8), channels: tuple = (12
 def increase_generator_resolution(neural_render: Model, repeat: int, channels: int, set_old_nontrainable: bool,
                                   block_size: int = 4) -> Model:
     postfix = '_l'
-    neural_render.layers.pop()
-    neural_render.layers.pop()
     if set_old_nontrainable:
         for l in neural_render.layers:
             l.trainable = False
             if l.name not in ('style', 'output', 'input', 'constant_input'): 
                 l._name = l.name + postfix
     style = neural_render.get_layer(name='style').output
-    current_layer = neural_render.get_layer(index=-1).output
+    current_layer = neural_render.get_layer(index=-3).output
     current_layer = __up_conv_block(current_layer, channels=channels)
-    current_layer = __ada_inst(style, current_layer)
     for _ in range(repeat):
+        current_layer = __ada_inst(style, current_layer)
         current_layer = __res_bottleneck_block(current_layer, channels=channels)
     output = Conv2DTranspose(3, (3, 3), strides=(1, 1), padding='same', name='output')(
         current_layer)
