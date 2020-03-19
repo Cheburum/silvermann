@@ -86,7 +86,7 @@ def progressive_learning(directory: str, batch_size: int):
 
 
 def continue_train(directory: str, batch_size: int, model_id: int):
-    new_model = load_model(f'style_nn_512x288_v4_{model_id}.h5', custom_objects={'ms_ssim': ms_ssim, 'AdaInstanceNormalization' : AdaInstanceNormalization})
+    new_model = load_model(f'style_nn_512x288_v4_{model_id}.h5', custom_objects={'ms_ssim': ms_ssim, 'ms_ssim_low': ms_ssim_low, 'AdaInstanceNormalization' : AdaInstanceNormalization})
     new_model.summary()
     prefix = f'out_model_{model_id}_epoch_'
     postfix = '.png'
