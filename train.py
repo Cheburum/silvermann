@@ -91,7 +91,7 @@ def continue_train(directory: str, batch_size: int, model_id: int):
     prefix = f'out_model_{model_id}_epoch_'
     postfix = '.png'
     initial_epoch = max(map(lambda x: int(x.replace(prefix, '').replace(postfix, '')), filter(lambda x: prefix in x, listdir('drawer'))))
-    train_model(new_model, epochs=100, directory=directory, batch_size=batch_size, initial_epoch=initial_epoch)
+    train_model(new_model, epochs=100, directory=directory, batch_size=batch_size, model_id = model_id, initial_epoch=initial_epoch)
 
 
 def main(directory: str, batch_size: int, model_id: int = -1):
