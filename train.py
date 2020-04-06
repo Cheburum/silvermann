@@ -19,10 +19,10 @@ import argparse
 from os import listdir
 
 def ms_ssim(true, pred):
-    return 1 - tf.image.ssim_multiscale(true, pred, 1.0, power_factors=(0.5, 0.3, 0.2))
+    return 1 - tf.reduce_mean(tf.image.ssim_multiscale(true, pred, 1.0, power_factors=(0.5, 0.3, 0.2)))
 
 def ms_ssim_low(true, pred):
-    return 1 - tf.image.ssim_multiscale(true, pred, 1.0, power_factors=(0.6, 0.4))
+    return 1 - tf.reduce_mean(tf.image.ssim_multiscale(true, pred, 1.0, power_factors=(0.6, 0.4)))
 
 
 def configurate_gpu():
